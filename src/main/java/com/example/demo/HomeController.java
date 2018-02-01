@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 @Controller
@@ -20,7 +21,7 @@ public class HomeController {
 
    @RequestMapping("/")
     public String listpeople(Model model){
-        model.addAttribute("peoples", peopleRepository.findAll());
+        model.addAttribute("people", peopleRepository.findAll());
         return "list";
     }
     @GetMapping("/add")
@@ -42,9 +43,30 @@ public class HomeController {
         model.addAttribute("people", peopleRepository.findOne(id));
         return "show";
     }
+    @RequestMapping("/update/{id}")
+    public String updateCourse(@PathVariable("id") long id, Model model) {
+        model.addAttribute("people", peopleRepository.findOne(id));
+        return "personform";
+    }
+
     @RequestMapping("/delete/{id}")
     public String delJob(@PathVariable("id") long id){
         peopleRepository.delete(id);
         return "redirect:/";
+    }
+    @GetMapping("/search")
+    public String getSearch()
+    {
+        return "searchform";
+    }
+
+    @PostMapping("/search")
+    public String showSearchResults(HttpServletRequest request, Model model)
+    {
+        //Get the search string from the result form
+        String searchString = request.getParameter("search");
+        model.addAttribute("search",searchString);
+        model.addAttribute("people",peopleRepository.findAllByLastnameContainingIgnoreCase(searchString));
+        return "list";
     }
 }
