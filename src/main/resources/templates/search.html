@@ -1,10 +1,32 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8"/>
     <title>Title</title>
 </head>
 <body>
+<form action="#"
+      th:action="@{/search}"
+      th:object="${people}"
+      method="post"/>
 
+<table>
+    <tr>
+        <th>first name</th>
+        <th>last name</th>
+        <th>phone number</th>
+        <td>Actions</td>
+    </tr>
+    <tr th:each="person : ${peoples}">
+        <td th:text="${person.firstname}"></td>
+        <td th:text="${person.lastname}"></td>
+        <td th:text="${person.phonenumber}"></td>
+        <td>
+            <a th:href="@{/update/{id}(id=${person.id})}">Update</a> -
+            <a th:href="@{/detail/{id}(id=${person.id})}">Details</a> -
+            <a th:href="@{/delete/{id}(id=${person.id})}">Delete</a> -
+        </td>
+    </tr>
+</table>
 </body>
 </html>
